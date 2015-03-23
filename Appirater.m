@@ -381,7 +381,7 @@ static BOOL _alwaysUseMainBundle = NO;
 	{
 		// check if the first use date has been set. if not, set it.
 		NSTimeInterval timeInterval = [userDefaults doubleForKey:kAppiraterFirstUseDate];
-		if (timeInterval == 0)
+		if (fabs(timeInterval) < 0.000001)
 		{
 			timeInterval = [[NSDate date] timeIntervalSince1970];
 			[userDefaults setDouble:timeInterval forKey:kAppiraterFirstUseDate];
@@ -429,7 +429,7 @@ static BOOL _alwaysUseMainBundle = NO;
 	{
 		// check if the first use date has been set. if not, set it.
 		NSTimeInterval timeInterval = [userDefaults doubleForKey:kAppiraterFirstUseDate];
-		if (timeInterval == 0)
+		if (fabs(timeInterval) < 0.000001)
 		{
 			timeInterval = [[NSDate date] timeIntervalSince1970];
 			[userDefaults setDouble:timeInterval forKey:kAppiraterFirstUseDate];
@@ -561,10 +561,10 @@ static BOOL _alwaysUseMainBundle = NO;
 
 + (id)getRootViewController {
     UIWindow *window = [[UIApplication sharedApplication] keyWindow];
-    if (window.windowLevel != UIWindowLevelNormal) {
+    if (fabs(window.windowLevel - UIWindowLevelNormal) > 0.001) {
         NSArray *windows = [[UIApplication sharedApplication] windows];
         for(window in windows) {
-            if (window.windowLevel == UIWindowLevelNormal) {
+            if (fabs(window.windowLevel - UIWindowLevelNormal) < 0.001) {
                 break;
             }
         }
@@ -654,6 +654,7 @@ static BOOL _alwaysUseMainBundle = NO;
 }
 
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
+#pragma unused(alertView)
 	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     
     id <AppiraterDelegate> delegate = _delegate;
@@ -693,6 +694,7 @@ static BOOL _alwaysUseMainBundle = NO;
 
 //Delegate call from the StoreKit view.
 - (void)productViewControllerDidFinish:(SKStoreProductViewController *)viewController {
+#pragma unused(viewController)
 	[Appirater closeModal];
 }
 

@@ -270,6 +270,12 @@ static BOOL _alwaysUseMainBundle = NO;
 
 - (void)showRatingAlert:(BOOL)displayRateLaterButton {
   UIAlertView *alertView = nil;
+  id <AppiraterDelegate> delegate = _delegate;
+    
+  if(delegate && [delegate respondsToSelector:@selector(appiraterShouldDisplayAlert:)] && ![delegate appiraterShouldDisplayAlert:self]) {
+      return;
+  }
+  
   if (displayRateLaterButton) {
   	alertView = [[UIAlertView alloc] initWithTitle:self.alertTitle
                                            message:self.alertMessage
@@ -287,7 +293,6 @@ static BOOL _alwaysUseMainBundle = NO;
 	self.ratingAlert = alertView;
     [alertView show];
 
-    id <AppiraterDelegate> delegate = _delegate;
     if (delegate && [delegate respondsToSelector:@selector(appiraterDidDisplayAlert:)]) {
              [delegate appiraterDidDisplayAlert:self];
     }
@@ -503,7 +508,15 @@ static BOOL _alwaysUseMainBundle = NO;
 + (void)appLaunched:(BOOL)canPromptForRating {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0),
                    ^{
-                       [[Appirater sharedInstance] incrementAndRate:canPromptForRating];
+                       Appirater *a = [Appirater sharedInstance];
+                       if (_debug) {
+                           dispatch_async(dispatch_get_main_queue(),
+                                          ^{
+                                              [a showRatingAlert];
+                                          });
+                       } else {
+                           [a incrementAndRate:canPromptForRating]; 
+                       }
                    });
 }
 

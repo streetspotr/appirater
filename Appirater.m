@@ -293,7 +293,7 @@ static BOOL _alwaysUseMainBundle = NO;
             [buttons addObject:self.alertCancelTitle];
             
             UIAlertController *alert = [UIAlertController alertControllerWithTitle:self.alertTitle message:self.alertMessage preferredStyle:UIAlertControllerStyleAlert];
-            for (NSInteger i = 0; i < buttons.count; i++) {
+            for (NSUInteger i = 0; i < buttons.count; i++) {
                 UIAlertActionStyle style = i == buttons.count - 1 ? UIAlertActionStyleCancel : UIAlertActionStyleDefault;
                 [alert addAction:[UIAlertAction actionWithTitle:buttons[i] style:style handler:^(UIAlertAction * _Nonnull action) {
                     NSString *title = action.title;
